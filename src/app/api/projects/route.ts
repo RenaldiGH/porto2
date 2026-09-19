@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const publishedOnly = request.nextUrl.searchParams.get("all") !== "true";
     const projects = await prisma.project.findMany({
       where: publishedOnly ? { isPublished: true } : undefined,
-      orderBy: { order: "asc" },
+      orderBy: [{ isFeatured: "desc" }, { order: "asc" }],
       include: { technologies: true },
     });
     return NextResponse.json(projects);

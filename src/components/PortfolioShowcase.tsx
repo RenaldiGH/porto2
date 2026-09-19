@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Award, ImageOff } from "lucide-react";
+import { ArrowUpRight, Award, ImageOff, Star } from "lucide-react";
 
 type TabId = "projects" | "certificates" | "stack";
 
@@ -19,6 +19,7 @@ interface Project {
   status: string;
   repoUrl: string | null;
   footnote: string | null;
+  isFeatured: boolean;
   technologies: { id: string; name: string }[];
 }
 
@@ -123,8 +124,16 @@ export default function PortfolioShowcase() {
                   return (
                     <div
                       key={project.id}
-                      className="p-6 sm:p-8 rounded-2xl border border-surface-border bg-surface hover:border-zinc-500 transition-all duration-200 flex flex-col justify-between space-y-6"
+                      className={`p-6 sm:p-8 rounded-2xl border bg-surface hover:border-zinc-500 transition-all duration-200 flex flex-col justify-between space-y-6 relative ${
+                        project.isFeatured ? "border-amber-500/40 ring-1 ring-amber-500/20" : "border-surface-border"
+                      }`}
                     >
+                      {project.isFeatured && (
+                        <span className="absolute -top-2.5 left-6 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-400 text-black text-[10px] font-bold font-mono uppercase tracking-wider shadow">
+                          <Star className="w-3 h-3 fill-black" />
+                          Featured
+                        </span>
+                      )}
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
