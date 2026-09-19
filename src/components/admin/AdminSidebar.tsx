@@ -10,11 +10,13 @@ import {
   MessageSquare,
   Settings,
   LogOut,
+  Layers,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/projects", label: "Kelola Proyek", icon: Package },
+  { href: "/admin/tech-stack", label: "Tech Stack", icon: Layers },
   { href: "/admin/sync", label: "Sinkronisasi Repo", icon: RefreshCw },
   { href: "/admin/certificates", label: "Sertifikasi & Skill", icon: ShieldCheck },
   { href: "/admin/guestbook", label: "Buku Tamu", icon: MessageSquare },
