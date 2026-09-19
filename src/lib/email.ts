@@ -33,7 +33,7 @@ export async function sendContactNotification({ name, email, message }: ContactE
       // punya (lihat README bagian Notifikasi Email).
       from: "Reynaldi Portfolio <onboarding@resend.dev>",
       to,
-      replyTo: email,
+      reply_to: email,
       subject: `Pesan baru dari ${name} — Reynaldi Portfolio`,
       html: `
         <div style="font-family: sans-serif; line-height: 1.6;">
