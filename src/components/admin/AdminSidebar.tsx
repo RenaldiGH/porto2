@@ -11,10 +11,12 @@ import {
   Settings,
   LogOut,
   Layers,
+  UserCircle,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/admin/profile", label: "Profil", icon: UserCircle },
   { href: "/admin/projects", label: "Kelola Proyek", icon: Package },
   { href: "/admin/tech-stack", label: "Tech Stack", icon: Layers },
   { href: "/admin/sync", label: "Sinkronisasi Repo", icon: RefreshCw },

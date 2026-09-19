@@ -1,14 +1,72 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Mail, Copy, Check, User, Code, Award, Clock, Code2 } from "lucide-react";
-import { stats, codeSnippetPlain, profile } from "@/data/content";
+import { profile as fallbackProfile } from "@/data/content";
 
-const statIcons = { "code-2": Code2, award: Award, clock: Clock } as const;
+interface Profile {
+  name: string;
+  origin: string;
+  role: string;
+  passion: string;
+  status: string;
+  headline: string;
+  subHeadline: string;
+  bio: string;
+  quote: string;
+  experienceYears: number;
+}
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
+  const [profile, setProfile] = useState<Profile>({
+    name: fallbackProfile.name,
+    origin: fallbackProfile.origin,
+    role: fallbackProfile.role,
+    passion: fallbackProfile.passion,
+    status: fallbackProfile.status,
+    headline: "Frontend Developer",
+    subHeadline: "Web Engineering & Database Management",
+    bio: "Saya adalah murid SMK PGRI 3 MALANG yang berfokus pada pengelolaan database dan selalu berupaya memberikan solusi terbaik dalam setiap proyek yang saya kerjakan.",
+    quote: "Leveraging AI as a professional tool, not a replacement.",
+    experienceYears: 4,
+  });
+  const [projectCount, setProjectCount] = useState(0);
+  const [certificateCount, setCertificateCount] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/profile")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setProfile(data);
+      })
+      .catch(() => {});
+
+    fetch("/api/projects")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setProjectCount(Array.isArray(data) ? data.length : 0))
+      .catch(() => {});
+
+    fetch("/api/certificates")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setCertificateCount(Array.isArray(data) ? data.length : 0))
+      .catch(() => {});
+  }, []);
+
+  const codeSnippetPlain = `const developer = {
+  name: '${profile.name}',
+  origin: '${profile.origin}',
+  role: '${profile.role}',
+  passion: '${profile.passion}',
+  status: '${profile.status}'
+};`;
+
+  const stats = [
+    { index: "01", icon: Code2, value: String(projectCount), label: "Projects", sub: "Innovative web apps" },
+    { index: "02", icon: Award, value: String(certificateCount), label: "Certificates", sub: "Skills validated" },
+    { index: "03", icon: Clock, value: String(profile.experienceYears), suffix: "y", label: "Experience", sub: "Continuous learning" },
+  ];
 
   async function handleCopy() {
     try {
@@ -32,26 +90,25 @@ export default function Hero() {
         >
           <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full border border-surface-border bg-surface text-xs font-mono text-zinc-300 tracking-wide">
             <span className="w-1.5 h-1.5 rounded-full bg-white" />
-            <span>SMK PGRI 3 MALANG</span>
+            <span>{profile.origin.toUpperCase()}</span>
             <span className="text-zinc-600">|</span>
             <span className="text-zinc-400">Tech Enthusiast</span>
           </div>
 
           <div className="space-y-3">
             <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tighter uppercase leading-[0.95] text-white">
-              Frontend
+              {profile.headline.split(" ")[0]}
               <br />
-              <span className="text-zinc-500 hover:text-zinc-300 transition-colors duration-300">Developer</span>
+              <span className="text-zinc-500 hover:text-zinc-300 transition-colors duration-300">
+                {profile.headline.split(" ").slice(1).join(" ")}
+              </span>
             </h1>
             <p className="text-lg sm:text-xl font-mono text-zinc-300 flex items-center gap-2 pt-2">
-              <span className="text-zinc-500">&gt;</span> Web Engineering &amp; Database Management
+              <span className="text-zinc-500">&gt;</span> {profile.subHeadline}
             </p>
           </div>
 
-          <p className="text-base sm:text-lg text-zinc-400 max-w-2xl leading-relaxed font-normal">
-            Pengelolaan database yang efisien dan solusi inovatif untuk setiap proyek. Saya berkomitmen untuk
-            memberikan hasil terbaik dalam setiap pekerjaan yang saya lakukan.
-          </p>
+          <p className="text-base sm:text-lg text-zinc-400 max-w-2xl leading-relaxed font-normal">{profile.bio}</p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <a
@@ -72,7 +129,7 @@ export default function Hero() {
 
           <div className="grid grid-cols-3 gap-4 pt-6 max-w-xl">
             {stats.map((stat) => {
-              const Icon = statIcons[stat.icon];
+              const Icon = stat.icon;
               return (
                 <div
                   key={stat.index}
@@ -159,12 +216,9 @@ export default function Hero() {
                 <p className="text-xs text-zinc-400 font-mono">{profile.origin.toUpperCase()}</p>
               </div>
             </div>
-            <p className="text-sm text-zinc-300 leading-relaxed">
-              Saya adalah murid SMK PGRI 3 MALANG yang berfokus pada pengelolaan database dan selalu berupaya
-              memberikan solusi terbaik dalam setiap proyek yang saya kerjakan.
-            </p>
+            <p className="text-sm text-zinc-300 leading-relaxed">{profile.bio}</p>
             <blockquote className="p-4 rounded-xl bg-black/60 border border-zinc-800/90 text-xs sm:text-sm font-mono text-zinc-300 italic border-l-2 border-l-white">
-              &ldquo;Leveraging AI as a professional tool, not a replacement.&rdquo;
+              &ldquo;{profile.quote}&rdquo;
             </blockquote>
             <a
               className="w-full inline-flex justify-center items-center gap-2 py-2.5 rounded-xl border border-zinc-700 hover:bg-zinc-800/80 text-xs font-mono uppercase tracking-wider text-zinc-200 transition-colors"

@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdminSession } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Default: cuma proyek published (aman untuk publik). Dashboard admin
+    // mengambil semua proyek langsung lewat Prisma di server component,
+    // bukan lewat endpoint publik ini.
+    const publishedOnly = request.nextUrl.searchParams.get("all") !== "true";
     const projects = await prisma.project.findMany({
+      where: publishedOnly ? { isPublished: true } : undefined,
       orderBy: { order: "asc" },
       include: { technologies: true },
     });
@@ -19,6 +25,9 @@ export async function GET() {
 // Dipakai dari admin/dashboard internal (belum ada UI-nya) untuk menambah
 // proyek baru saat mengisi data asli (Fase 2 roadmap).
 export async function POST(request: NextRequest) {
+  const session = await requireAdminSession();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const body = await request.json();
     const project = await prisma.project.create({

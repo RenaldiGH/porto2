@@ -2,18 +2,35 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { Share2, Send, MessageSquare, MessageCircle } from "lucide-react";
-import { socials } from "@/data/content";
 import type { GuestbookEntry } from "@/types";
+
+interface Social {
+  id: string;
+  platform: string;
+  handle: string;
+  url: string;
+  initials: string;
+}
 
 export default function ContactGuestbook() {
   // Contact form state
   const [contactStatus, setContactStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  // Socials state
+  const [socials, setSocials] = useState<Social[]>([]);
 
   // Guestbook state
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [gbName, setGbName] = useState("");
   const [gbMessage, setGbMessage] = useState("");
   const [gbLoading, setGbLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/socials")
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setSocials)
+      .catch(() => setSocials([]));
+  }, []);
 
   useEffect(() => {
     async function loadEntries() {
@@ -175,9 +192,9 @@ export default function ContactGuestbook() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {socials.map((social) => (
               <a
-                key={social.name}
+                key={social.id}
                 className="p-3.5 rounded-xl border border-zinc-800 bg-black/50 hover:border-zinc-600 hover:bg-zinc-900/50 transition-all flex items-center justify-between group"
-                href={social.href}
+                href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -186,7 +203,7 @@ export default function ContactGuestbook() {
                     {social.initials}
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-white">{social.name}</div>
+                    <div className="text-xs font-semibold text-white">{social.platform}</div>
                     <div className="text-[11px] text-zinc-500 font-mono">{social.handle}</div>
                   </div>
                 </div>
@@ -208,7 +225,7 @@ export default function ContactGuestbook() {
               </span>
             </div>
             <span className="text-xs font-mono text-zinc-500 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" /> Live Local
+              <span className="w-2 h-2 rounded-full bg-emerald-500" /> Live
             </span>
           </div>
 

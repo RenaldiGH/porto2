@@ -97,18 +97,23 @@ src/
     admin/                                  # dashboard admin (dilindungi middleware)
       layout.tsx                            # sidebar + cek sesi
       page.tsx                              # ringkasan/dashboard
+      profile/                              # edit headline/bio/quote (Hero)
       projects/                             # Kelola Proyek (list, tambah, edit)
+      tech-stack/                           # Kelola kategori & item tech stack
       guestbook/                            # moderasi komentar guestbook
       certificates/                         # kelola sertifikat
       sync/                                  # Sinkronisasi Repo (GitHub PAT)
       settings/                              # placeholder
     api/
       auth/login, auth/logout               # session admin (cookie JWT)
-      projects, projects/[id]               # CRUD proyek
-      certificates, certificates/[id]
-      guestbook, guestbook/[id]
-      contact                               # simpan pesan + kirim email (Resend)
-      profile, tech-stack, socials          # data publik (GET)
+      admin/github/repos, admin/github/user # proteksi sesi admin
+      profile (GET publik, PATCH admin)
+      projects, projects/[id]               # GET publik (published only), mutasi admin
+      certificates, certificates/[id]       # GET publik, mutasi admin
+      tech-stack, tech-stack/[id], tech-stack/items(/[id])  # GET publik, mutasi admin
+      guestbook, guestbook/[id]             # POST publik (komentar), DELETE admin
+      contact                               # POST publik, simpan pesan + kirim email (Resend)
+      socials                               # GET publik
   components/
     admin/                                  # Sidebar, ProjectsTable, ProjectForm, dll
     (Header, Hero, TechStack, dll)          # komponen portofolio publik
@@ -125,13 +130,21 @@ scripts/hash-password.js                    # generate ADMIN_PASSWORD_HASH
 | Menu | Fungsi |
 | :--- | :--- |
 | **Dashboard** | Ringkasan jumlah proyek, sertifikat, guestbook, pesan belum dibaca |
-| **Kelola Proyek** | Tambah/edit/hapus proyek, toggle Tayang/Draft, cari & filter |
+| **Profil** | Edit headline, bio, quote, tahun pengalaman — tampil langsung di Hero portofolio publik |
+| **Kelola Proyek** | Tambah/edit/hapus proyek, toggle Tayang/Draft, cari & filter — otomatis tampil di portofolio publik |
+| **Tech Stack** | Tambah/hapus kategori & item tech stack — otomatis tampil di section Tech Stack Breakdown |
 | **Sinkronisasi Repo** | Tarik daftar repo GitHub (pakai PAT), impor sebagai proyek draft |
-| **Sertifikasi & Skill** | Tambah/hapus sertifikat |
+| **Sertifikasi & Skill** | Tambah/hapus sertifikat — otomatis tampil di tab Certificates |
 | **Buku Tamu** | Lihat & hapus komentar guestbook |
 | **Pengaturan** | Panduan ganti password admin |
 
 > Catatan: sinkronisasi pakai Personal Access Token (bukan OAuth App penuh) — lihat bagian "Setup Sinkronisasi GitHub" di atas untuk alasan & cara setup.
+
+## Keamanan API
+
+Semua endpoint yang mengubah data (POST/PATCH/DELETE untuk proyek, sertifikat, tech stack, dan hapus komentar guestbook) **wajib login admin** — dicek lewat `requireAdminSession()` di setiap route, bukan cuma dilindungi di level halaman. Endpoint yang memang untuk publik tetap terbuka tanpa login: kirim pesan kontak, kirim komentar guestbook, dan semua GET data portofolio (proyek yang published, sertifikat, tech stack, sosial media, profil).
+
+> Belum ada admin UI untuk mengelola **Sosial Media** (Instagram/GitHub/TikTok) dan **Skill Badge** (chip di tab Tech Stack) — datanya masih di `src/data/content.ts` untuk skill badge, dan tabel `SocialLink` di database untuk sosial media (sudah tersambung ke halaman publik lewat `/api/socials`, tapi belum ada form tambah/edit di dashboard). Kalau butuh, tinggal bilang.
 
 ## Keamanan Login
 

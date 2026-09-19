@@ -2,12 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import { navLinks, profile } from "@/data/content";
+import { navLinks, profile as fallbackProfile } from "@/data/content";
 
 export default function Header() {
   const [time, setTime] = useState("24°C • --:-- WIB");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [guestCount, setGuestCount] = useState(0);
+  const [location, setLocation] = useState(fallbackProfile.location);
+
+  useEffect(() => {
+    fetch("/api/profile")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.location) setLocation(data.location);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     function updateClock() {
@@ -67,7 +77,7 @@ export default function Header() {
 
         <div className="flex items-center space-x-4">
           <div className="hidden lg:flex flex-col text-right font-mono text-[11px] text-zinc-400">
-            <span className="text-white font-medium">{profile.location}</span>
+            <span className="text-white font-medium">{location}</span>
             <span className="text-zinc-500">{time}</span>
           </div>
           <a
