@@ -1,0 +1,173 @@
+// ============================================================================
+// Reynaldi Portfolio — Database Schema (PostgreSQL via Prisma, hosted di Supabase)
+// ============================================================================
+// Catatan migrasi: sebelumnya pakai MySQL, sekarang PostgreSQL karena Supabase
+// menyediakan database Postgres. `directUrl` dipakai khusus untuk migrasi
+// (koneksi langsung, bukan lewat connection pooler) — wajib diisi supaya
+// `prisma migrate` jalan lancar di Supabase + Vercel (serverless).
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ----------------------------------------------------------------------------
+// 1. PROFILE — data inti Hero Section & Code Window
+// ----------------------------------------------------------------------------
+model Profile {
+  id              String   @id @default(cuid())
+  name            String   @db.VarChar(100)
+  origin          String   @db.VarChar(150)
+  role            String   @db.VarChar(150)
+  passion         String   @db.VarChar(200)
+  status          String   @db.VarChar(100)
+  location        String   @db.VarChar(100)
+  headline        String   @db.VarChar(150)
+  subHeadline     String   @db.VarChar(200)
+  bio             String   @db.Text
+  quote           String   @db.VarChar(300)
+  avatarUrl       String?  @db.VarChar(500)
+  experienceYears Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ----------------------------------------------------------------------------
+// 2. TECH STACK
+// ----------------------------------------------------------------------------
+model TechCategory {
+  id    String     @id @default(cuid())
+  title String     @db.VarChar(100)
+  badge String     @db.VarChar(50)
+  order Int        @default(0)
+  items TechItem[]
+
+  @@index([order])
+}
+
+model TechItem {
+  id          String       @id @default(cuid())
+  categoryId  String
+  category    TechCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name        String       @db.VarChar(100)
+  tag         String       @db.VarChar(100)
+  description String       @db.VarChar(300)
+  order       Int          @default(0)
+
+  @@index([categoryId, order])
+}
+
+// ----------------------------------------------------------------------------
+// 3. TAGS — teknologi per proyek (many-to-many)
+// ----------------------------------------------------------------------------
+model Tag {
+  id       String    @id @default(cuid())
+  name     String    @unique @db.VarChar(50)
+  projects Project[]
+}
+
+// ----------------------------------------------------------------------------
+// 4. PROJECTS — dikelola lewat dashboard admin (/admin/projects)
+// ----------------------------------------------------------------------------
+enum ProjectStatus {
+  IN_PRODUCTION
+  INTERNAL_TOOL
+  ARCHIVED
+  PLANNED
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  slug         String        @unique @db.VarChar(150)
+  name         String        @db.VarChar(150)
+  description  String        @db.VarChar(500)
+  status       ProjectStatus @default(PLANNED) // badge publik: "In Production" dst
+  repoUrl      String?       @db.VarChar(500) // link tombol "Code" di portofolio publik
+  repoFullName String?       @db.VarChar(200) // ex: "RenaldiGH/modern-ecommerce-app" (tampil di admin)
+  branch       String?       @db.VarChar(50) // ex: "main" / "master" / "production" / "dev"
+  demoUrl      String?       @db.VarChar(500)
+  footnote     String?       @db.VarChar(100)
+  isFeatured   Boolean       @default(false)
+  isPublished  Boolean       @default(true) // toggle "Tayang / Draft" di dashboard admin
+  order        Int           @default(0)
+  technologies Tag[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([order])
+  @@index([isPublished])
+}
+
+// ----------------------------------------------------------------------------
+// 5. CERTIFICATES
+// ----------------------------------------------------------------------------
+model Certificate {
+  id            String    @id @default(cuid())
+  title         String    @db.VarChar(200)
+  issuer        String    @db.VarChar(150)
+  issueDate     DateTime?
+  credentialUrl String?   @db.VarChar(500)
+  imageUrl      String?   @db.VarChar(500)
+  description   String?   @db.VarChar(500)
+  order         Int       @default(0)
+  createdAt     DateTime  @default(now())
+
+  @@index([order])
+}
+
+// ----------------------------------------------------------------------------
+// 6. SKILL BADGES
+// ----------------------------------------------------------------------------
+model SkillBadge {
+  id    String @id @default(cuid())
+  label String @db.VarChar(100)
+  order Int    @default(0)
+
+  @@index([order])
+}
+
+// ----------------------------------------------------------------------------
+// 7. SOCIAL LINKS
+// ----------------------------------------------------------------------------
+model SocialLink {
+  id       String @id @default(cuid())
+  platform String @db.VarChar(50)
+  handle   String @db.VarChar(100)
+  url      String @db.VarChar(500)
+  initials String @db.VarChar(4)
+  order    Int    @default(0)
+
+  @@index([order])
+}
+
+// ----------------------------------------------------------------------------
+// 8. GUESTBOOK — dikelola lewat dashboard admin (/admin/guestbook)
+// ----------------------------------------------------------------------------
+model GuestbookEntry {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(80)
+  message   String   @db.VarChar(500)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// ----------------------------------------------------------------------------
+// 9. CONTACT MESSAGES — dikirim juga sebagai email notifikasi (lihat src/lib/email.ts)
+// ----------------------------------------------------------------------------
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(120)
+  email     String   @db.VarChar(160)
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
