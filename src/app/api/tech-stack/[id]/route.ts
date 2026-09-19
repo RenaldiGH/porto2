@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    // items ikut terhapus otomatis (onDelete: Cascade di schema.prisma)
     await prisma.techCategory.delete({ where: { id: params.id } });
     return NextResponse.json({ ok: true });
   } catch (error) {

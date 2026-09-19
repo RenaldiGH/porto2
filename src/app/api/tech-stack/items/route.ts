@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest) {
   try {
-    await prisma.techItem.delete({ where: { id: params.id } });
-    return NextResponse.json({ ok: true });
+    const body = await request.json();
+    const item = await prisma.techItem.create({
+      data: {
+        categoryId: String(body.categoryId),
+        name: String(body.name),
+        tag: String(body.tag),
+        description: String(body.description || ""),
+        order: Number(body.order ?? 0),
+      },
+    });
+    return NextResponse.json(item, { status: 201 });
   } catch (error) {
-    console.error("DELETE /api/tech-stack/items/[id] failed:", error);
-    return NextResponse.json({ error: "Failed to delete item" }, { status: 400 });
+    console.error("POST /api/tech-stack/items failed:", error);
+    return NextResponse.json({ error: "Failed to create item" }, { status: 400 });
   }
 }
