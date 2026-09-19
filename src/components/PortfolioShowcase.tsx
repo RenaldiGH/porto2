@@ -44,6 +44,12 @@ const statusLabel: Record<string, string> = {
   PLANNED: "Planned",
 };
 
+// Jaga-jaga kalau admin lupa ketik "https://" di depan URL (Demo URL / Repo URL)
+// — tanpa ini, browser menganggapnya sebagai path relatif di situs sendiri.
+function withProtocol(url: string) {
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+}
+
 export default function PortfolioShowcase() {
   const [active, setActive] = useState<TabId>("projects");
   const [projects, setProjects] = useState<Project[]>([]);
@@ -172,7 +178,7 @@ export default function PortfolioShowcase() {
                           {project.demoUrl && (
                             <a
                               className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-emerald-400 hover:text-emerald-300 transition-colors group"
-                              href={project.demoUrl}
+                              href={withProtocol(project.demoUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -183,7 +189,7 @@ export default function PortfolioShowcase() {
                           {project.repoUrl ? (
                             <a
                               className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-white hover:text-zinc-300 transition-colors group"
-                              href={project.repoUrl}
+                              href={withProtocol(project.repoUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -228,7 +234,7 @@ export default function PortfolioShowcase() {
                 {certificates.map((cert) => (
                   <a
                     key={cert.id}
-                    href={cert.credentialUrl ?? undefined}
+                    href={cert.credentialUrl ? withProtocol(cert.credentialUrl) : undefined}
                     target={cert.credentialUrl ? "_blank" : undefined}
                     rel={cert.credentialUrl ? "noopener noreferrer" : undefined}
                     className={`p-5 rounded-2xl border border-surface-border bg-surface flex items-start gap-3 ${
