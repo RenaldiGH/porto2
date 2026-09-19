@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Award } from "lucide-react";
-import { skillBadges } from "@/data/content";
+import { ArrowUpRight, Award, ImageOff } from "lucide-react";
 
 type TabId = "projects" | "certificates" | "stack";
 
@@ -30,6 +29,12 @@ interface Certificate {
   credentialUrl: string | null;
 }
 
+interface Skill {
+  id: string;
+  label: string;
+  iconUrl: string | null;
+}
+
 const statusLabel: Record<string, string> = {
   IN_PRODUCTION: "In Production",
   INTERNAL_TOOL: "Internal Tool",
@@ -41,20 +46,24 @@ export default function PortfolioShowcase() {
   const [active, setActive] = useState<TabId>("projects");
   const [projects, setProjects] = useState<Project[]>([]);
   const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       fetch("/api/projects").then((res) => (res.ok ? res.json() : [])),
       fetch("/api/certificates").then((res) => (res.ok ? res.json() : [])),
+      fetch("/api/skills").then((res) => (res.ok ? res.json() : [])),
     ])
-      .then(([projectsData, certificatesData]) => {
+      .then(([projectsData, certificatesData, skillsData]) => {
         setProjects(projectsData);
         setCertificates(certificatesData);
+        setSkills(skillsData);
       })
       .catch(() => {
         setProjects([]);
         setCertificates([]);
+        setSkills([]);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -221,23 +230,26 @@ export default function PortfolioShowcase() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="p-8 rounded-2xl border border-surface-border bg-surface text-center max-w-2xl mx-auto space-y-4">
-              <h3 className="text-lg font-bold text-white font-mono uppercase">Full Technical Profile</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed font-mono">
-                Focusing on Next.js, React 18, Strict TypeScript, Tailwind CSS, PostgreSQL Relational Database
-                Engineering, Prisma ORM, Git Architecture, and Linux Environments.
-              </p>
-              <div className="flex flex-wrap justify-center gap-2 pt-2">
-                {skillBadges.map((badge) => (
-                  <span
-                    key={badge}
-                    className="px-3 py-1 bg-black border border-zinc-800 text-xs font-mono text-zinc-300 rounded-md"
+            {!loading && skills.length === 0 ? (
+              <p className="text-sm text-zinc-500 text-center py-10">Belum ada skill icon ditambahkan.</p>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-4xl mx-auto">
+                {skills.map((skill) => (
+                  <div
+                    key={skill.id}
+                    className="p-4 rounded-2xl border border-surface-border bg-surface flex flex-col items-center gap-2.5 hover:border-zinc-500 hover:-translate-y-0.5 transition-all duration-200"
                   >
-                    {badge}
-                  </span>
+                    {skill.iconUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={skill.iconUrl} alt={skill.label} className="w-10 h-10 object-contain" />
+                    ) : (
+                      <ImageOff className="w-10 h-10 text-zinc-700" />
+                    )}
+                    <span className="text-xs font-semibold text-white text-center">{skill.label}</span>
+                  </div>
                 ))}
               </div>
-            </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

@@ -125,9 +125,10 @@ model Certificate {
 // 6. SKILL BADGES
 // ----------------------------------------------------------------------------
 model SkillBadge {
-  id    String @id @default(cuid())
-  label String @db.VarChar(100)
-  order Int    @default(0)
+  id      String  @id @default(cuid())
+  label   String  @db.VarChar(100)
+  iconUrl String? @db.VarChar(500) // link gambar/logo (ex: dari cdn.simpleicons.org)
+  order   Int     @default(0)
 
   @@index([order])
 }

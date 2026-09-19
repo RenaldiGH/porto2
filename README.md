@@ -61,6 +61,16 @@ Fitur "Sinkronisasi Repo" di dashboard admin menarik daftar repository GitHub ka
 
 > Kalau suatu saat kamu butuh flow **"Login with GitHub"** yang sebenarnya (banyak admin, masing-masing login pakai akun GitHub sendiri), itu perlu OAuth App terpisah (Client ID/Secret + callback URL) — bisa ditambahkan lain waktu kalau memang dibutuhkan.
 
+## Update Skema: Skill Icon
+
+Ditambahkan field `iconUrl` di tabel `SkillBadge` (buat logo teknologi di tab "Tech Stack" — Portfolio Showcase). Kalau database Supabase kamu sudah pernah di-migrate sebelumnya, jalankan sekali lagi supaya kolom barunya ikut terbuat:
+
+```bash
+npx prisma migrate dev --name add_skill_icon_url
+```
+
+Lalu tambahkan skill icon-nya lewat menu **Tech Stack** di dashboard admin (bagian bawah, "Skill Icons") — bukan lewat seed, supaya data proyek/isi lain yang sudah ada tidak ikut terhapus.
+
 ## 5. Menjalankan di Lokal
 
 ```bash
@@ -132,7 +142,7 @@ scripts/hash-password.js                    # generate ADMIN_PASSWORD_HASH
 | **Dashboard** | Ringkasan jumlah proyek, sertifikat, guestbook, pesan belum dibaca |
 | **Profil** | Edit headline, bio, quote, tahun pengalaman — tampil langsung di Hero portofolio publik |
 | **Kelola Proyek** | Tambah/edit/hapus proyek, toggle Tayang/Draft, cari & filter — otomatis tampil di portofolio publik |
-| **Tech Stack** | Tambah/hapus kategori & item tech stack — otomatis tampil di section Tech Stack Breakdown |
+| **Tech Stack** | Kelola kategori & item Tech Stack Breakdown, DAN grid logo skill (tab "Tech Stack" di Portfolio Showcase) |
 | **Sinkronisasi Repo** | Tarik daftar repo GitHub (pakai PAT), impor sebagai proyek draft |
 | **Sertifikasi & Skill** | Tambah/hapus sertifikat — otomatis tampil di tab Certificates |
 | **Buku Tamu** | Lihat & hapus komentar guestbook |

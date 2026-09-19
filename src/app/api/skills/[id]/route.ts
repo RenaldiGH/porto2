@@ -7,10 +7,10 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    await prisma.certificate.delete({ where: { id: params.id } });
+    await prisma.skillBadge.delete({ where: { id: params.id } });
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("DELETE /api/certificates/[id] failed:", error);
-    return NextResponse.json({ error: "Failed to delete certificate" }, { status: 400 });
+    console.error("DELETE /api/skills/[id] failed:", error);
+    return NextResponse.json({ error: "Failed to delete skill" }, { status: 400 });
   }
 }

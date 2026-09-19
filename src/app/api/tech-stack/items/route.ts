@@ -2,24 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/require-admin";
 
-export async function POST(request: NextRequest) {
+export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
   const session = await requireAdminSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const body = await request.json();
-    const item = await prisma.techItem.create({
-      data: {
-        categoryId: String(body.categoryId),
-        name: String(body.name),
-        tag: String(body.tag),
-        description: String(body.description || ""),
-        order: Number(body.order ?? 0),
-      },
-    });
-    return NextResponse.json(item, { status: 201 });
+    await prisma.techItem.delete({ where: { id: params.id } });
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("POST /api/tech-stack/items failed:", error);
-    return NextResponse.json({ error: "Failed to create item" }, { status: 400 });
+    console.error("DELETE /api/tech-stack/items/[id] failed:", error);
+    return NextResponse.json({ error: "Failed to delete item" }, { status: 400 });
   }
 }
