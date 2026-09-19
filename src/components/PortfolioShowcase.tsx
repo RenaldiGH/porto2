@@ -18,6 +18,7 @@ interface Project {
   description: string;
   status: string;
   repoUrl: string | null;
+  demoUrl: string | null;
   footnote: string | null;
   isFeatured: boolean;
   technologies: { id: string; name: string }[];
@@ -156,7 +157,7 @@ export default function PortfolioShowcase() {
                         </div>
                         <p className="text-sm text-zinc-400 leading-relaxed">{project.description}</p>
                       </div>
-                      <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
+                      <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between flex-wrap gap-3">
                         <div className="flex flex-wrap gap-2">
                           {project.technologies.map((tech) => (
                             <span
@@ -167,21 +168,36 @@ export default function PortfolioShowcase() {
                             </span>
                           ))}
                         </div>
-                        {project.repoUrl ? (
-                          <a
-                            className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-white hover:text-zinc-300 transition-colors group"
-                            href={project.repoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <span>Code</span>
-                            <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                          </a>
-                        ) : (
-                          <div className="flex items-center text-xs font-mono text-zinc-500">
-                            <span>{project.footnote}</span>
-                          </div>
-                        )}
+                        <div className="flex items-center gap-4">
+                          {project.demoUrl && (
+                            <a
+                              className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-emerald-400 hover:text-emerald-300 transition-colors group"
+                              href={project.demoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span>Live Demo</span>
+                              <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            </a>
+                          )}
+                          {project.repoUrl ? (
+                            <a
+                              className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-white hover:text-zinc-300 transition-colors group"
+                              href={project.repoUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <span>Code</span>
+                              <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            </a>
+                          ) : (
+                            !project.demoUrl && (
+                              <div className="flex items-center text-xs font-mono text-zinc-500">
+                                <span>{project.footnote}</span>
+                              </div>
+                            )
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
