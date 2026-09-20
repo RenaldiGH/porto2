@@ -18,24 +18,38 @@ interface Profile {
   experienceYears: number;
 }
 
-export default function Hero() {
+interface HeroProps {
+  initialProfile?: Profile | null;
+  initialProjectCount?: number;
+  initialCertificateCount?: number;
+}
+
+const defaultProfile: Profile = {
+  name: fallbackProfile.name,
+  origin: fallbackProfile.origin,
+  role: fallbackProfile.role,
+  passion: fallbackProfile.passion,
+  status: fallbackProfile.status,
+  headline: "Frontend Developer",
+  subHeadline: "Web Engineering & Database Management",
+  bio: "Saya adalah murid SMK PGRI 3 MALANG yang berfokus pada pengelolaan database dan selalu berupaya memberikan solusi terbaik dalam setiap proyek yang saya kerjakan.",
+  quote: "Leveraging AI as a professional tool, not a replacement.",
+  experienceYears: 4,
+};
+
+export default function Hero({ initialProfile, initialProjectCount, initialCertificateCount }: HeroProps) {
   const [copied, setCopied] = useState(false);
-  const [profile, setProfile] = useState<Profile>({
-    name: fallbackProfile.name,
-    origin: fallbackProfile.origin,
-    role: fallbackProfile.role,
-    passion: fallbackProfile.passion,
-    status: fallbackProfile.status,
-    headline: "Frontend Developer",
-    subHeadline: "Web Engineering & Database Management",
-    bio: "Saya adalah murid SMK PGRI 3 MALANG yang berfokus pada pengelolaan database dan selalu berupaya memberikan solusi terbaik dalam setiap proyek yang saya kerjakan.",
-    quote: "Leveraging AI as a professional tool, not a replacement.",
-    experienceYears: 4,
-  });
-  const [projectCount, setProjectCount] = useState(0);
-  const [certificateCount, setCertificateCount] = useState(0);
+  // Kalau data awal sudah dikirim dari server (page.tsx), langsung dipakai —
+  // tidak ada lagi kelip "4y" berubah jadi "2y" karena tidak perlu nunggu fetch.
+  const [profile, setProfile] = useState<Profile>(initialProfile ?? defaultProfile);
+  const [projectCount, setProjectCount] = useState(initialProjectCount ?? 0);
+  const [certificateCount, setCertificateCount] = useState(initialCertificateCount ?? 0);
 
   useEffect(() => {
+    // Fallback: kalau karena suatu sebab data awal dari server tidak ada
+    // (initialProfile undefined), baru fetch dari client sebagai cadangan.
+    if (initialProfile !== undefined) return;
+
     fetch("/api/profile")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
@@ -52,6 +66,7 @@ export default function Hero() {
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => setCertificateCount(Array.isArray(data) ? data.length : 0))
       .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const codeSnippetPlain = `const developer = {

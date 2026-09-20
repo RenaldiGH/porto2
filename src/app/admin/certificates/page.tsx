@@ -18,6 +18,7 @@ export default async function AdminCertificatesPage() {
           title: c.title,
           issuer: c.issuer,
           credentialUrl: c.credentialUrl,
+          fileUrl: c.fileUrl,
         }))}
       />
     </div>

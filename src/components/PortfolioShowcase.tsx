@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Award, ImageOff, Star } from "lucide-react";
+import { ArrowUpRight, Award, ImageOff, Star, Download } from "lucide-react";
 
 type TabId = "projects" | "certificates" | "stack";
 
@@ -30,6 +30,7 @@ interface Certificate {
   title: string;
   issuer: string;
   credentialUrl: string | null;
+  fileUrl: string | null;
 }
 
 interface Skill {
@@ -241,21 +242,43 @@ export default function PortfolioShowcase() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
                 {certificates.map((cert) => (
-                  <a
+                  <div
                     key={cert.id}
-                    href={cert.credentialUrl ? withProtocol(cert.credentialUrl) : undefined}
-                    target={cert.credentialUrl ? "_blank" : undefined}
-                    rel={cert.credentialUrl ? "noopener noreferrer" : undefined}
-                    className={`p-5 rounded-2xl border border-surface-border bg-surface flex items-start gap-3 ${
-                      cert.credentialUrl ? "hover:border-zinc-500 transition-colors" : ""
-                    }`}
+                    className="p-5 rounded-2xl border border-surface-border bg-surface hover:border-zinc-500 transition-colors flex flex-col gap-3"
                   >
-                    <Award className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-sm font-bold text-white">{cert.title}</h4>
-                      <p className="text-xs text-zinc-500 mt-0.5">{cert.issuer}</p>
+                    <div className="flex items-start gap-3">
+                      <Award className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="text-sm font-bold text-white">{cert.title}</h4>
+                        <p className="text-xs text-zinc-500 mt-0.5">{cert.issuer}</p>
+                      </div>
                     </div>
-                  </a>
+                    {(cert.credentialUrl || cert.fileUrl) && (
+                      <div className="flex flex-wrap gap-3 pt-1 pl-8">
+                        {cert.credentialUrl && (
+                          <a
+                            href={withProtocol(cert.credentialUrl)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-white hover:text-zinc-300 transition-colors"
+                          >
+                            <span>Lihat Kredensial</span>
+                            <ArrowUpRight className="w-3 h-3" />
+                          </a>
+                        )}
+                        {cert.fileUrl && (
+                          <a
+                            href={cert.fileUrl}
+                            download
+                            className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                          >
+                            <Download className="w-3 h-3" />
+                            <span>Download Bukti</span>
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             )}

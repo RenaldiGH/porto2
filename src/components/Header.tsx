@@ -4,19 +4,24 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { navLinks, profile as fallbackProfile } from "@/data/content";
 
-export default function Header() {
+export default function Header({ initialLocation }: { initialLocation?: string | null }) {
   const [time, setTime] = useState("24°C • --:-- WIB");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [guestCount, setGuestCount] = useState(0);
-  const [location, setLocation] = useState(fallbackProfile.location);
+  const [location, setLocation] = useState(initialLocation || fallbackProfile.location);
 
   useEffect(() => {
+    // Data lokasi sudah dikirim dari server (page.tsx) — cuma fetch ulang
+    // kalau karena suatu sebab initialLocation tidak dikirim sama sekali.
+    if (initialLocation !== undefined) return;
+
     fetch("/api/profile")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.location) setLocation(data.location);
       })
       .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

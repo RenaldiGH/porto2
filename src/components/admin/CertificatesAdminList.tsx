@@ -1,19 +1,49 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { Trash2, Award, Plus } from "lucide-react";
+import { FormEvent, useRef, useState } from "react";
+import { Trash2, Award, Plus, UploadCloud, FileCheck } from "lucide-react";
 
 interface Certificate {
   id: string;
   title: string;
   issuer: string;
   credentialUrl: string | null;
+  fileUrl?: string | null;
 }
 
 export default function CertificatesAdminList({ initialCertificates }: { initialCertificates: Certificate[] }) {
   const [certificates, setCertificates] = useState(initialCertificates);
   const [saving, setSaving] = useState(false);
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "certificates");
+
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal upload file");
+
+      setUploadedFileUrl(data.url);
+      setUploadedFileName(file.name);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Gagal upload file");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function handleAdd(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -23,6 +53,7 @@ export default function CertificatesAdminList({ initialCertificates }: { initial
       title: String(formData.get("title") || ""),
       issuer: String(formData.get("issuer") || ""),
       credentialUrl: String(formData.get("credentialUrl") || "") || null,
+      fileUrl: uploadedFileUrl,
     };
     if (!payload.title || !payload.issuer) return;
 
@@ -37,6 +68,9 @@ export default function CertificatesAdminList({ initialCertificates }: { initial
       const created = await res.json();
       setCertificates((prev) => [...prev, created]);
       form.reset();
+      setUploadedFileUrl(null);
+      setUploadedFileName(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     } catch {
       alert("Gagal menambah sertifikat.");
     } finally {
@@ -66,7 +100,40 @@ export default function CertificatesAdminList({ initialCertificates }: { initial
           <input name="title" required placeholder="Judul sertifikat" className="admin-input" />
           <input name="issuer" required placeholder="Penerbit (ex: Dicoding, Google)" className="admin-input" />
         </div>
-        <input name="credentialUrl" placeholder="Link kredensial (opsional)" className="admin-input" />
+        <input name="credentialUrl" placeholder="Link verifikasi online (opsional)" className="admin-input" />
+
+        <div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-zinc-700 text-zinc-300 text-xs font-medium hover:border-zinc-500 hover:text-white transition-colors disabled:opacity-60"
+            >
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>{uploading ? "Mengupload..." : "Upload File Bukti (PDF/gambar)"}</span>
+            </button>
+            {uploadedFileName && (
+              <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400">
+                <FileCheck className="w-3.5 h-3.5" />
+                {uploadedFileName}
+              </span>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,application/pdf"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+          </div>
+          <p className="text-[11px] text-zinc-600 mt-1.5">
+            File ini yang bisa didownload pengunjung sebagai bukti kamu mengikuti kegiatan/pelatihannya. Boleh PDF
+            atau gambar (scan sertifikat), maksimal 10MB.
+          </p>
+          {uploadError && <p className="text-[11px] text-rose-400 mt-1">{uploadError}</p>}
+        </div>
+
         <button
           type="submit"
           disabled={saving}
@@ -87,7 +154,14 @@ export default function CertificatesAdminList({ initialCertificates }: { initial
           {certificates.map((cert) => (
             <div key={cert.id} className="p-4 rounded-xl border border-zinc-800 bg-surface flex items-center justify-between gap-4">
               <div className="min-w-0">
-                <div className="font-bold text-sm text-white">{cert.title}</div>
+                <div className="flex items-center gap-2">
+                  <div className="font-bold text-sm text-white">{cert.title}</div>
+                  {cert.fileUrl && (
+                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 border border-emerald-900/50 bg-emerald-950/30 px-1.5 py-0.5 rounded">
+                      <FileCheck className="w-3 h-3" /> Ada file bukti
+                    </span>
+                  )}
+                </div>
                 <div className="text-xs text-zinc-500">{cert.issuer}</div>
               </div>
               <button

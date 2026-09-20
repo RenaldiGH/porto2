@@ -1,8 +1,8 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Save, ArrowLeft } from "lucide-react";
+import { Save, ArrowLeft, UploadCloud } from "lucide-react";
 import Link from "next/link";
 
 export interface ProjectFormValues {
@@ -53,10 +53,36 @@ export default function ProjectForm({ initial }: { initial?: ProjectFormValues }
   );
   const [techInput, setTechInput] = useState(initial?.technologies.join(", ") ?? "");
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function update<K extends keyof ProjectFormValues>(key: K, value: ProjectFormValues[K]) {
     setValues((prev) => ({ ...prev, [key]: value }));
+  }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "projects");
+
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal upload gambar");
+
+      update("imageUrl", data.url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Gagal upload gambar");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -165,19 +191,34 @@ export default function ProjectForm({ initial }: { initial?: ProjectFormValues }
           </Field>
         </div>
 
-        <Field label="Foto/Screenshot Proyek (link gambar, opsional)">
-          <input
-            value={values.imageUrl}
-            onChange={(e) => update("imageUrl", e.target.value)}
-            placeholder="https://i.imgur.com/xxxxx.png"
-            className="input"
-          />
-          <p className="text-[11px] text-zinc-600 mt-1.5 leading-relaxed">
-            Upload screenshot proyekmu ke{" "}
-            <a href="https://imgur.com/upload" target="_blank" rel="noopener noreferrer" className="underline text-zinc-500">
-              imgur.com
-            </a>{" "}
-            (gratis, tanpa akun), lalu salin link gambarnya ke sini.
+        <Field label="Foto/Screenshot Proyek (opsional)">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              value={values.imageUrl}
+              onChange={(e) => update("imageUrl", e.target.value)}
+              placeholder="Link gambar, atau upload lewat tombol di samping"
+              className="input flex-1"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-300 text-sm font-medium hover:border-zinc-500 hover:text-white transition-colors disabled:opacity-60 shrink-0"
+            >
+              <UploadCloud className="w-4 h-4" />
+              <span>{uploading ? "Mengupload..." : "Upload"}</span>
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+          </div>
+          <p className="text-[11px] text-zinc-600 mt-1.5">
+            Klik &quot;Upload&quot; buat pilih gambar dari HP/komputer kamu (otomatis kesimpan ke Supabase Storage),
+            atau tempel link gambar dari luar kalau sudah ada.
           </p>
           {values.imageUrl && (
             // eslint-disable-next-line @next/next/no-img-element

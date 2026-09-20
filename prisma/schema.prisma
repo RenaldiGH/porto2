@@ -113,7 +113,8 @@ model Certificate {
   title         String    @db.VarChar(200)
   issuer        String    @db.VarChar(150)
   issueDate     DateTime?
-  credentialUrl String?   @db.VarChar(500)
+  credentialUrl String?   @db.VarChar(500) // link verifikasi online (opsional)
+  fileUrl       String?   @db.VarChar(500) // file bukti (PDF/gambar) yang bisa didownload
   imageUrl      String?   @db.VarChar(500)
   description   String?   @db.VarChar(500)
   order         Int       @default(0)

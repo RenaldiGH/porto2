@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
         issuer: String(body.issuer),
         issueDate: body.issueDate ? new Date(body.issueDate) : null,
         credentialUrl: body.credentialUrl || null,
+        fileUrl: body.fileUrl || null,
         imageUrl: body.imageUrl || null,
         description: body.description || null,
         order: Number(body.order ?? 0),
