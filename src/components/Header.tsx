@@ -56,14 +56,7 @@ export default function Header({ initialLocation }: { initialLocation?: string |
             <span className="text-lg font-black tracking-tight font-mono group-hover:opacity-80 transition-opacity">
               REYNALDI<span className="text-zinc-500">.DEV</span>
             </span>
-          </a>
-          <div className="hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full border border-surface-border bg-surface text-[11px] font-mono font-medium tracking-wide">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-            <span className="text-zinc-300">READY TO INNOVATE</span>
-          </div>
+          </a>      
         </div>
 
         <nav className="hidden md:flex items-center space-x-8 text-xs font-mono tracking-wider uppercase text-zinc-400">

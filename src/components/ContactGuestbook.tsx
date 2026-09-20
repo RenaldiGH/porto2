@@ -223,10 +223,7 @@ export default function ContactGuestbook() {
               <span className="px-2 py-0.5 rounded-full text-xs font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">
                 {entries.length}
               </span>
-            </div>
-            <span className="text-xs font-mono text-zinc-500 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" /> Live
-            </span>
+            </div>  
           </div>
 
           <form className="space-y-4" onSubmit={handleGuestbookSubmit}>

@@ -154,11 +154,7 @@ export default function PortfolioShowcase() {
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
-                            <span
-                              className={`w-2.5 h-2.5 rounded-full ${
-                                isLive ? "bg-emerald-400 animate-pulse" : "bg-zinc-400"
-                              }`}
-                            />
+                            
                             <h3 className="text-xl font-bold text-white tracking-tight font-mono">{project.name}</h3>
                           </div>
                           <span
