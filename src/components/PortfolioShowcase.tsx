@@ -273,7 +273,7 @@ export default function PortfolioShowcase() {
                             className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
                           >
                             <Download className="w-3 h-3" />
-                            <span>Download Bukti</span>
+                            <span>Details</span>
                           </a>
                         )}
                       </div>
