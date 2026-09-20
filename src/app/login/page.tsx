@@ -50,7 +50,7 @@ function LoginForm() {
           <div className="inline-flex w-12 h-12 rounded-xl border border-zinc-800 bg-surface items-center justify-center mb-2">
             <Lock className="w-5 h-5 text-white" />
           </div>
-          <h1 className="text-xl font-bold text-white font-mono tracking-tight">REYNALDI.DEV</h1>
+          <h1 className="text-xl font-bold text-white font-mono tracking-tight">REYNALDI🤓</h1>
           <p className="text-xs text-zinc-500 font-mono uppercase tracking-widest">Admin Workspace</p>
         </div>
 
