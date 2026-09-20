@@ -92,6 +92,7 @@ model Project {
   repoFullName String?       @db.VarChar(200) // ex: "RenaldiGH/modern-ecommerce-app" (tampil di admin)
   branch       String?       @db.VarChar(50) // ex: "main" / "master" / "production" / "dev"
   demoUrl      String?       @db.VarChar(500)
+  imageUrl     String?       @db.VarChar(500) // screenshot/preview proyek, tampil di card portofolio publik
   footnote     String?       @db.VarChar(100)
   isFeatured   Boolean       @default(false)
   isPublished  Boolean       @default(true) // toggle "Tayang / Draft" di dashboard admin

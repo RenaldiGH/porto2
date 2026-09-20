@@ -22,6 +22,7 @@ export default async function EditProjectPage({ params }: { params: { id: string
         repoFullName: project.repoFullName ?? "",
         branch: project.branch ?? "",
         demoUrl: project.demoUrl ?? "",
+        imageUrl: project.imageUrl ?? "",
         footnote: project.footnote ?? "",
         isFeatured: project.isFeatured,
         isPublished: project.isPublished,

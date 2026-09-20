@@ -6,6 +6,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
+    // Default: cuma proyek published (aman untuk publik). Dashboard admin
+    // mengambil semua proyek langsung lewat Prisma di server component,
+    // bukan lewat endpoint publik ini.
     const publishedOnly = request.nextUrl.searchParams.get("all") !== "true";
     const projects = await prisma.project.findMany({
       where: publishedOnly ? { isPublished: true } : undefined,
@@ -32,9 +35,13 @@ export async function POST(request: NextRequest) {
         description: String(body.description),
         status: body.status ?? "PLANNED",
         repoUrl: body.repoUrl ?? null,
+        repoFullName: body.repoFullName ?? null,
+        branch: body.branch ?? null,
         demoUrl: body.demoUrl ?? null,
+        imageUrl: body.imageUrl ?? null,
         footnote: body.footnote ?? null,
         isFeatured: Boolean(body.isFeatured ?? false),
+        isPublished: body.isPublished !== undefined ? Boolean(body.isPublished) : true,
         order: Number(body.order ?? 0),
         technologies: {
           connectOrCreate: (body.technologies ?? []).map((name: string) => ({

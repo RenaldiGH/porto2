@@ -32,6 +32,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     if (body.repoFullName !== undefined) data.repoFullName = body.repoFullName || null;
     if (body.branch !== undefined) data.branch = body.branch || null;
     if (body.demoUrl !== undefined) data.demoUrl = body.demoUrl || null;
+    if (body.imageUrl !== undefined) data.imageUrl = body.imageUrl || null;
     if (body.footnote !== undefined) data.footnote = body.footnote || null;
     if (body.isFeatured !== undefined) data.isFeatured = Boolean(body.isFeatured);
     if (body.isPublished !== undefined) data.isPublished = Boolean(body.isPublished);

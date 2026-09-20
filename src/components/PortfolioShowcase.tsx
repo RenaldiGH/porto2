@@ -19,6 +19,7 @@ interface Project {
   status: string;
   repoUrl: string | null;
   demoUrl: string | null;
+  imageUrl: string | null;
   footnote: string | null;
   isFeatured: boolean;
   technologies: { id: string; name: string }[];
@@ -140,6 +141,14 @@ export default function PortfolioShowcase() {
                           <Star className="w-3 h-3 fill-black" />
                           Featured
                         </span>
+                      )}
+                      {project.imageUrl && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={project.imageUrl}
+                          alt={project.name}
+                          className="w-full aspect-video object-cover rounded-xl border border-zinc-800"
+                        />
                       )}
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">

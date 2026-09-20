@@ -15,6 +15,7 @@ export interface ProjectFormValues {
   repoFullName: string;
   branch: string;
   demoUrl: string;
+  imageUrl: string;
   footnote: string;
   isFeatured: boolean;
   isPublished: boolean;
@@ -42,6 +43,7 @@ export default function ProjectForm({ initial }: { initial?: ProjectFormValues }
       repoFullName: "",
       branch: "main",
       demoUrl: "",
+      imageUrl: "",
       footnote: "",
       isFeatured: false,
       isPublished: true,
@@ -162,6 +164,30 @@ export default function ProjectForm({ initial }: { initial?: ProjectFormValues }
             />
           </Field>
         </div>
+
+        <Field label="Foto/Screenshot Proyek (link gambar, opsional)">
+          <input
+            value={values.imageUrl}
+            onChange={(e) => update("imageUrl", e.target.value)}
+            placeholder="https://i.imgur.com/xxxxx.png"
+            className="input"
+          />
+          <p className="text-[11px] text-zinc-600 mt-1.5 leading-relaxed">
+            Upload screenshot proyekmu ke{" "}
+            <a href="https://imgur.com/upload" target="_blank" rel="noopener noreferrer" className="underline text-zinc-500">
+              imgur.com
+            </a>{" "}
+            (gratis, tanpa akun), lalu salin link gambarnya ke sini.
+          </p>
+          {values.imageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={values.imageUrl}
+              alt="Preview"
+              className="mt-3 w-full max-w-xs rounded-xl border border-zinc-800 object-cover aspect-video"
+            />
+          )}
+        </Field>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Demo URL (opsional)">
