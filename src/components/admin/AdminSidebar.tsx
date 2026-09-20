@@ -42,7 +42,7 @@ export default function AdminSidebar({ adminEmail }: { adminEmail: string }) {
           R
         </div>
         <div>
-          <div className="text-sm font-black tracking-tight font-mono text-white">REYNALDI.DEV</div>
+          <div className="text-sm font-black tracking-tight font-mono text-white">REYNALDI🤓</div>
           <div className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider">Admin Workspace</div>
         </div>
       </div>
