@@ -39,7 +39,7 @@ export default function TechStack() {
           </h2>
         </div>
         <div className="px-3 py-1 rounded-full border border-surface-border text-xs font-mono text-zinc-400 self-start sm:self-auto">
-          2024 Stack
+          2025 Stack
         </div>
       </div>
 
