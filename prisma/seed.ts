@@ -11,11 +11,11 @@ async function main() {
     data: {
       name: "Reynaldi",
       origin: "SMK PGRI 3 Malang",
-      role: "Frontend & Database",
+      role: "Backend & Database",
       passion: "Building Scalable Web Apps",
       status: "Active & Innovating",
       location: "MALANG, ID",
-      headline: "Frontend Developer",
+      headline: "Backend Developer",
       subHeadline: "Web Engineering & Database Management",
       bio: "Saya adalah murid SMK PGRI 3 MALANG yang berfokus pada pengelolaan database dan selalu berupaya memberikan solusi terbaik dalam setiap proyek yang saya kerjakan.",
       quote: "Leveraging AI as a professional tool, not a replacement.",
@@ -88,7 +88,7 @@ async function main() {
       slug: "modern-web-app",
       name: "Modern Web App",
       description:
-        "Sistem informasi database dengan integrasi frontend responsif dan manajemen query efisien, didukung caching dan modern state handler.",
+        "Sistem informasi database dengan integrasi backend dan manajemen query efisien, didukung caching serta pengelolaan state modern.",
       status: ProjectStatus.IN_PRODUCTION,
       repoUrl: "https://github.com/RenaldiGH/modern-ecommerce-app",
       repoFullName: "RenaldiGH/modern-ecommerce-app",
@@ -123,7 +123,7 @@ async function main() {
   await prisma.skillBadge.deleteMany();
   await prisma.skillBadge.createMany({
     data: [
-      { label: "Frontend Architecture", order: 0 },
+      { label: "Backend Architecture", order: 0 },
       { label: "Relational Schemas", order: 1 },
       { label: "API Optimization", order: 2 },
       { label: "Clean Code", order: 3 },

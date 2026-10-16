@@ -1,7 +1,7 @@
 export const profile = {
   name: "Reynaldi",
   origin: "SMK PGRI 3 Malang",
-  role: "Frontend & Database",
+  role: "Backend & Database",
   passion: "Building Scalable Web Apps",
   status: "Active & Innovating",
   location: "MALANG, ID",
@@ -17,7 +17,7 @@ export const codeSnippetLines = [
   { indent: 0, parts: [{ t: "const", c: "text-zinc-500" }, { t: " developer", c: "text-white font-semibold" }, { t: " = {", c: "text-zinc-300" }] },
   { indent: 1, parts: [{ t: "name", c: "text-zinc-400" }, { t: ": ", c: "text-zinc-300" }, { t: "'Reynaldi'", c: "text-white" }, { t: ",", c: "text-zinc-300" }] },
   { indent: 1, parts: [{ t: "origin", c: "text-zinc-400" }, { t: ": ", c: "text-zinc-300" }, { t: "'SMK PGRI 3 Malang'", c: "text-white" }, { t: ",", c: "text-zinc-300" }] },
-  { indent: 1, parts: [{ t: "role", c: "text-zinc-400" }, { t: ": ", c: "text-zinc-300" }, { t: "'Frontend & Database'", c: "text-white" }, { t: ",", c: "text-zinc-300" }] },
+  { indent: 1, parts: [{ t: "role", c: "text-zinc-400" }, { t: ": ", c: "text-zinc-300" }, { t: "'Backend & Database'", c: "text-white" }, { t: ",", c: "text-zinc-300" }] },
   { indent: 1, parts: [{ t: "passion", c: "text-zinc-400" }, { t: ": ", c: "text-zinc-300" }, { t: "'Building Scalable Web Apps'", c: "text-white" }, { t: ",", c: "text-zinc-300" }] },
   { indent: 1, parts: [{ t: "status", c: "text-zinc-400" }, { t: ": ", c: "text-zinc-300" }] },
   { indent: 0, parts: [{ t: "};", c: "text-zinc-300" }] },
@@ -26,7 +26,7 @@ export const codeSnippetLines = [
 export const codeSnippetPlain = `const developer = {
   name: 'Reynaldi',
   origin: 'SMK PGRI 3 Malang',
-  role: 'Frontend & Database',
+  role: 'Backend & Database',
   passion: 'Building Scalable Web Apps',
   status: 'Active & Innovating'
 };`;
@@ -67,7 +67,7 @@ export const projects = [
     status: "In Production",
     live: true,
     description:
-      "Sistem informasi database dengan integrasi frontend responsif dan manajemen query efisien, didukung caching dan modern state handler.",
+      "Sistem informasi database dengan integrasi backend dan manajemen query efisien, didukung caching serta pengelolaan state modern.",
     tags: ["Next.js", "Tailwind", "MySQL"],
     linkLabel: "Code",
     href: "https://github.com/RenaldiGH",
@@ -86,7 +86,7 @@ export const projects = [
 ] as const;
 
 export const skillBadges = [
-  "Frontend Architecture",
+  "Backend Architecture",
   "Relational Schemas",
   "API Optimization",
   "Clean Code",

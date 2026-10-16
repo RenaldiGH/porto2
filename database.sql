@@ -173,8 +173,8 @@ CREATE INDEX IF NOT EXISTS "ContactMessage_createdAt_idx" ON "ContactMessage" ("
 -- ============================================================================
 
 INSERT INTO "Profile" ("id", "name", "origin", "role", "passion", "status", "location", "headline", "subHeadline", "bio", "quote", "experienceYears")
-VALUES ('profile_1', 'Reynaldi', 'SMK PGRI 3 Malang', 'Frontend & Database', 'Building Scalable Web Apps',
-   'Active & Innovating', 'MALANG, ID', 'Frontend Developer', 'Web Engineering & Database Management',
+VALUES ('profile_1', 'Reynaldi', 'SMK PGRI 3 Malang', 'Backend & Database', 'Building Scalable Web Apps',
+   'Active & Innovating', 'MALANG, ID', 'Backend Developer', 'Web Engineering & Database Management',
    'Saya adalah murid SMK PGRI 3 MALANG yang berfokus pada pengelolaan database dan selalu berupaya memberikan solusi terbaik dalam setiap proyek yang saya kerjakan.',
    'Leveraging AI as a professional tool, not a replacement.', 4)
 ON CONFLICT ("id") DO NOTHING;
@@ -208,7 +208,7 @@ ON CONFLICT ("id") DO NOTHING;
 INSERT INTO "Project" ("id", "slug", "name", "description", "status", "repoUrl", "repoFullName", "branch", "footnote", "isFeatured", "isPublished", "order")
 VALUES
   ('proj_1', 'modern-web-app', 'Modern Web App',
-   'Sistem informasi database dengan integrasi frontend responsif dan manajemen query efisien, didukung caching dan modern state handler.',
+   'Sistem informasi database dengan integrasi backend dan manajemen query efisien, didukung caching serta pengelolaan state modern.',
    'IN_PRODUCTION', 'https://github.com/RenaldiGH/modern-ecommerce-app', 'RenaldiGH/modern-ecommerce-app', 'main', NULL, true, true, 0),
   ('proj_2', 'database-query-engine', 'Database Query Engine',
    'Perancangan skema relasional terstruktur untuk mengoptimasi query execution plan dan pengelolaan data secara terpusat.',
@@ -224,7 +224,7 @@ INSERT INTO "_ProjectToTag" ("A", "B") VALUES
 ON CONFLICT DO NOTHING;
 
 INSERT INTO "SkillBadge" ("id", "label", "order") VALUES
-  ('skill_1', 'Frontend Architecture', 0),
+  ('skill_1', 'Backend Architecture', 0),
   ('skill_2', 'Relational Schemas', 1),
   ('skill_3', 'API Optimization', 2),
   ('skill_4', 'Clean Code', 3)

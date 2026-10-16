@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Reynaldi — Frontend Developer & Database Management",
+  title: "Reynaldi — Backend Developer & Database Management",
   description:
-    "Portofolio Reynaldi, siswa SMK PGRI 3 Malang — Frontend Developer & Database Management. Next.js, TypeScript, Tailwind CSS, MySQL & Prisma.",
+    "Portofolio Reynaldi, siswa SMK PGRI 3 Malang — Backend Developer & Database Management. Next.js, TypeScript, Tailwind CSS, MySQL & Prisma.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -30,7 +30,7 @@ const defaultProfile: Profile = {
   role: fallbackProfile.role,
   passion: fallbackProfile.passion,
   status: fallbackProfile.status,
-  headline: "Frontend Developer",
+  headline: "Backend Developer",
   subHeadline: "Web Engineering & Database Management",
   bio: "Saya adalah murid SMK PGRI 3 MALANG yang berfokus pada pengelolaan database dan selalu berupaya memberikan solusi terbaik dalam setiap proyek yang saya kerjakan.",
   quote: "Leveraging AI as a professional tool, not a replacement.",
